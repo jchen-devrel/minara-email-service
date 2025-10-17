@@ -1,0 +1,20 @@
+[
+    {
+        "email": "frank@dmind.ai",
+        "name": "Frank",
+        "username": "frank_crypto",
+        "user_type": "individual"
+    },
+    {
+        "email": "test.user@example.com",
+        "name": "Alex Chen",
+        "username": "alexc_trader",
+        "user_type": "individual"
+    },
+    {
+        "email": "demo@minara.ai",
+        "name": "Demo User",
+        "username": "demo_user",
+        "user_type": "individual"
+    }
+]

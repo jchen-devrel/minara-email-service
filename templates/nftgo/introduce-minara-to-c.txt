@@ -1,0 +1,29 @@
+
+Subject: NFTGo introduces Minara: your AI assistant for digital finance
+
+Hello NFTGo Community Member,
+
+You’ve known us as NFTGo, the leading NFT analytics and trading platform. NFTGo remains active and fully supported — we continue to maintain the datasets, dashboards, and APIs you rely on.
+Over the past year, we’ve expanded beyond analytics into AI for digital finance. This effort led to Minara — an all-in-one financial AI assistant that combines deep analytics, workflows, and execution, powered by DMind, our open-source AGI research initiative developing finance-native models, benchmarks, and datasets for digital assets.
+Minara, NFTGo, and DMind are sister projects under the same group, each serving a different layer of the ecosystem:
+[Image]
+- NFTGo — market intelligence and analytics for NFTs and digital assets
+- Minara — an all-in-one financial AI assistant spanning analysis → reasoning → execution
+- DMind — open-source, finance-native models and data powering AI products in digital finance
+What is Minara?
+ Minara brings together everything you care about — crypto, stocks, DeFi, RWAs, NFTs, commodities, and more. She keeps you ahead of the market with real-time insights and helps you catch trends before they go mainstream. Beyond insights, Minara lets you trade seamlessly across chains and even build financial agents in plain words. She connects the full cycle — from analysis, to decision, to execution — all in one place.
+What you can do with Minara
+- Analyze with insight: Ask complex questions about tokens, wallets, or DeFi strategies and get insightful answers built from multiple data sources — so you see not just the what, but also the why.
+- Stay ahead of the alpha: Track assets and markets in real time, set smart alerts, and follow wallets or collections to catch trends before the crowd.
+- Trade smoothly: Place spot and limit orders, or copy-trade top wallets gaslessly across multiple chains, with an experience as seamless as your favorite exchange.
+- Turn words into agents: Create simple agents in words to monitor wallets, trigger alerts, or automate strategies for you.
+
+Join Minara (Early Phase)
+Minara is currently in early access. There are a few ways to get in:
+- Join the waitlist to receive an invite code soon:  Join Minara Early Access
+- Reply to this email with your interest, and I’ll follow up personally to answer any questions and provide invite codes on a case-by-case basis.
+
+Thanks for growing with us! See you inside.
+
+Best regards,
+ Frank — NFTGo & Minara Team

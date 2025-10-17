@@ -1,0 +1,23 @@
+Subject: NFTGo introduces Minara: your AI assistant for digital finance
+
+Hello NFTGo Partner,
+You’ve known us as NFTGo, the leading NFT analytics and trading platform. NFTGo remains active and fully supported — we continue to maintain the datasets, dashboards, and APIs you rely on.
+Over the past year, we’ve expanded beyond analytics into AI for digital finance. This effort led to Minara — an all-in-one financial AI assistant that combines deep analytics, workflows, and execution, powered by DMind, our open-source AGI research initiative building finance-native models, benchmarks, and datasets.
+
+Minara, NFTGo, and DMind are sister projects under the same group, each serving a different layer of the ecosystem:
+[Image]
+- NFTGo — market intelligence and analytics for NFTs and digital assets
+- Minara — an all-in-one financial AI assistant spanning analysis → reasoning → execution
+- DMind — open-source, finance-native models and data powering these products
+
+What Minara means to you
+- Deeper analysis via APIs: unify 70+ curated data sources (on-chain flows, CEX/DEX markets, DeFi, sentiment, macro) with finance-native language models.
+- Workflow automation: convert complex monitoring/reporting into repeatable agents that collect data, reason, and alert.
+- Execution built in: run wallet-based strategies or place spot and limit orders across major chains with workflow automation through a secure custodial wallet framework.
+Early access for partners
+ Minara is currently in early access. As a valued NFTGo enterprise user, you’re invited to:
+- Reply to this email to express your interest. I’ll personally follow up to schedule a brief walkthrough, help map your existing workflows to Minara, and provide any migration support between NFTGo and Minara.
+- For specific questions, you can also reach me directly at frank@minara.ai.
+Your relationship with our team remains unchanged — now strengthened by a platform that goes further: from analysis to decision to execution.
+Best regards,
+ Frank — NFTGo & Minara Team

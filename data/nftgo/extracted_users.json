@@ -1,0 +1,8 @@
+[
+    {
+        "email": "frank@dmind.ai",
+        "name": "Frank",
+        "username": "frank_dmind",
+        "verify_email_url": "https://developer.nftgo.io/verify?token=example_token_123"
+    }
+]
