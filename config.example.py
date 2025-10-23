@@ -9,7 +9,7 @@ MINARA_CONFIG = {
     'smtp_password': 'your-password-here',
     'from_email': 'koda@minara.ai',
     'from_name': 'Koda from Minara',
-    'delay_between_emails': 1,  # seconds
+    'delay_between_emails': 11,  # seconds
 }
 
 # NFTGo Campaign Configuration
@@ -18,7 +18,7 @@ NFTGO_CONFIG = {
     'smtp_password': 'your-password-here',
     'from_email': 'frank@nftgo.io',
     'from_name': 'Frank from NFTGo',
-    'delay_between_emails': 20,  # seconds
+    'delay_between_emails': 15,  # seconds
 }
 
 # Alternative: Mailgun API Configuration (optional)

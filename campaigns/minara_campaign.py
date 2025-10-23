@@ -18,9 +18,9 @@ def main():
     parser = argparse.ArgumentParser(description='Run Minara email campaign')
     parser.add_argument('--dry-run', action='store_true', help='Test mode - no emails sent')
     parser.add_argument('--test', type=str, help='Send test email to specified address')
-    parser.add_argument('--template', default='feedback-request.html', 
+    parser.add_argument('--template', default='3-event-user-reactivation.html', 
                        help='Template filename')
-    parser.add_argument('--users', default='extracted_users.json',
+    parser.add_argument('--users', default='ai-meet-digital-finance.json',
                        help='User data filename')
     args = parser.parse_args()
     
@@ -36,7 +36,7 @@ def main():
         sender.send_test_email(
             template_path=f'templates/minara/{args.template}',
             test_email=args.test,
-            subject='Can we chat about your Minara experience?',
+            subject='Getting started with Minara',
             method='smtp'
         )
         return
@@ -53,7 +53,9 @@ def main():
     
     # Campaign configuration
     template_path = f'templates/minara/{args.template}'
-    subject = 'Can we chat about your Minara experience?'
+    
+    # ⚠️  SUBJECT LINE: Modify this line to change the email subject
+    subject = 'Getting started with Minara'
     
     print(f"\n📧 Email Campaign:")
     print(f"   Template: {template_path}")
@@ -78,4 +80,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
