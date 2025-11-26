@@ -347,6 +347,17 @@ python campaigns/minara_campaign.py --dry-run
 python campaigns/minara_campaign.py
 ```
 
+**Common commands**:
+
+```bash
+python3 campaigns/minara_campaign.py --users test-list.json --template 11-26-pre-launch-update.html --subject "Minara Is Now Open to Everyone"
+
+python3 campaigns/nftgo_campaign.py --users nftgo_users.json --template introduce-minara-to-b.html
+
+python3 src/convert_txt_to_json.py data/minara/11-26-heavy-and-active-user.txt data/minara/11-26-heavy-and-active-user.json --source "heavy-and-active"
+```
+
+
 ---
 
 Need help? Check logs in `campaigns/*/email_send.log`

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 NFTGo Email Campaign Script
-Usage: python campaigns/nftgo_campaign.py [--dry-run] [--test]
+Usage: python campaigns/nftgo_campaign.py [--dry-run] [--test <email>] [--subject <text>]
 """
 
 import sys
@@ -22,6 +22,8 @@ def main():
                        help='Template filename')
     parser.add_argument('--users', default='nftgo_users.json',
                        help='User data filename')
+    parser.add_argument('--subject', type=str, default='NFTGo introduces Minara: your AI assistant for digital finance',
+                       help='Email subject line')
     args = parser.parse_args()
     
     # Setup logging
@@ -36,7 +38,7 @@ def main():
         sender.send_test_email(
             template_path=f'templates/nftgo/{args.template}',
             test_email=args.test,
-            subject='NFTGo introduces Minara: your AI assistant for digital finance',
+            subject=args.subject,
             method='smtp'
         )
         return
@@ -53,7 +55,7 @@ def main():
     
     # Campaign configuration
     template_path = f'templates/nftgo/{args.template}'
-    subject = 'NFTGo introduces Minara: your AI assistant for digital finance'
+    subject = args.subject
     
     print(f"\n📧 Email Campaign:")
     print(f"   Template: {template_path}")

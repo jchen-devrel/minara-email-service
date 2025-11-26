@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """
 Convert email list from txt file to JSON format for email campaigns
-Usage: python src/convert_emails_to_json.py
+Usage: python src/convert_txt_to_json.py <input.txt> <output.json> [--source <source_name>]
 """
 
 import json
+import argparse
 from pathlib import Path
 
-def convert_emails_to_json():
+def convert_emails_to_json(txt_file, json_file, source_name=None):
     """Convert email list from txt to JSON format"""
     
-    # Read emails from txt file
-    txt_file = Path('ai-meet-digital-finance.txt')
-    json_file = Path('data/minara/ai-meet-digital-finance.json')
+    txt_file = Path(txt_file)
+    json_file = Path(json_file)
     
     if not txt_file.exists():
         print(f"❌ File not found: {txt_file}")
@@ -40,9 +40,10 @@ def convert_emails_to_json():
         user_data = {
             "id": i,
             "email": email,
-            "name": "",  # Empty name field
-            "source": "ai-meet-digital-finance-event"
+            "name": ""  # Empty name field
         }
+        if source_name:
+            user_data["source"] = source_name
         users_data.append(user_data)
     
     # Ensure directory exists
@@ -58,7 +59,19 @@ def convert_emails_to_json():
     # Show sample of converted data
     print(f"\n📋 Sample data:")
     for user in users_data[:3]:
-        print(f"   {user['email']}")
+        print(f"   {json.dumps(user, ensure_ascii=False)}")
+
+def main():
+    parser = argparse.ArgumentParser(description='Convert txt email list to JSON')
+    parser.add_argument('input', nargs='?', default='data/minara/11-12-d3rentention50free.txt',
+                       help='Input txt file (default: data/minara/11-12-d3rentention50free.txt)')
+    parser.add_argument('output', nargs='?', default='data/minara/11-12-d3rentention50free.json',
+                       help='Output JSON file (default: data/minara/11-12-d3rentention50free.json)')
+    parser.add_argument('--source', type=str, default=None,
+                       help='Source identifier (optional, e.g., "ai-meet-digital-finance-event")')
+    args = parser.parse_args()
+    
+    convert_emails_to_json(args.input, args.output, args.source)
 
 if __name__ == '__main__':
-    convert_emails_to_json()
+    main()

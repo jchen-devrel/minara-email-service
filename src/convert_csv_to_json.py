@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """
 Extract username and email from CSV file and save to JSON
+Usage: python src/convert_csv_to_json.py <input.csv> <output.json> [--source <source_name>]
 """
 
 import csv
 import json
 import sys
 import re
-from pathlib ixmport Path
+import argparse
+from pathlib import Path
 
 def clean_name(name):
     """Clean problematic characters from name"""
@@ -23,7 +25,7 @@ def clean_name(name):
     
     return name.strip()
 
-def extract_users_from_csv(csv_file, output_file=None):
+def extract_users_from_csv(csv_file, output_file=None, source_name=None):
     """Extract username and email from CSV file"""
     users = []
     
@@ -52,6 +54,10 @@ def extract_users_from_csv(csv_file, output_file=None):
                 else:
                     user_data['name'] = username
                 
+                # Add source if provided
+                if source_name:
+                    user_data['source'] = source_name
+                
                 users.append(user_data)
         
         print(f"✅ Extracted {len(users)} users from {csv_file}")
@@ -70,14 +76,20 @@ def extract_users_from_csv(csv_file, output_file=None):
 
 def main():
     """Main function"""
-    csv_file = "74429_2025_09_17.csv"
-    output_file = "extracted_users.json"
+    parser = argparse.ArgumentParser(description='Convert CSV file to JSON')
+    parser.add_argument('input', nargs='?', default='data/minara/74429_2025_09_17.csv',
+                       help='Input CSV file (default: data/minara/74429_2025_09_17.csv)')
+    parser.add_argument('output', nargs='?', default='extracted_users.json',
+                       help='Output JSON file (default: extracted_users.json)')
+    parser.add_argument('--source', type=str, default=None,
+                       help='Source identifier (optional)')
+    args = parser.parse_args()
     
     print("🔄 Extracting users from CSV...")
     print("=" * 50)
     
     # Extract users
-    users = extract_users_from_csv(csv_file, output_file)
+    users = extract_users_from_csv(args.input, args.output, args.source)
     
     if users:
         print(f"\n📊 Summary:")

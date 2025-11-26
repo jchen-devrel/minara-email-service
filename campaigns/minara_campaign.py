@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Minara Email Campaign Script
-Usage: python campaigns/minara_campaign.py [--dry-run] [--test]
+Usage: python campaigns/minara_campaign.py [--dry-run] [--test <email>] [--subject <text>]
 """
 
 import sys
@@ -22,6 +22,8 @@ def main():
                        help='Template filename')
     parser.add_argument('--users', default='ai-meet-digital-finance.json',
                        help='User data filename')
+    parser.add_argument('--subject', type=str, default='Getting started with Minara',
+                       help='Email subject line')
     args = parser.parse_args()
     
     # Setup logging
@@ -36,7 +38,7 @@ def main():
         sender.send_test_email(
             template_path=f'templates/minara/{args.template}',
             test_email=args.test,
-            subject='Getting started with Minara',
+            subject=args.subject,
             method='smtp'
         )
         return
@@ -53,9 +55,7 @@ def main():
     
     # Campaign configuration
     template_path = f'templates/minara/{args.template}'
-    
-    # ⚠️  SUBJECT LINE: Modify this line to change the email subject
-    subject = 'Getting started with Minara'
+    subject = args.subject
     
     print(f"\n📧 Email Campaign:")
     print(f"   Template: {template_path}")

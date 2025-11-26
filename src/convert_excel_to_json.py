@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """
 Convert Excel file to JSON format for email campaigns
+Usage: python src/convert_excel_to_json.py <input.xlsx> <output.json> [--source <source_name>]
 """
 
 import pandas as pd
 import json
 import sys
+import argparse
 from pathlib import Path
 
-def convert_excel_to_json(excel_file, json_file):
+def convert_excel_to_json(excel_file, json_file, source_name=None):
     """
     Convert Excel file to JSON format
     """
@@ -57,6 +59,9 @@ def convert_excel_to_json(excel_file, json_file):
 
             # Only include users with valid email addresses
             if cleaned_user.get('email') and '@' in cleaned_user['email']:
+                # Add source if provided
+                if source_name:
+                    cleaned_user['source'] = source_name
                 cleaned_data.append(cleaned_user)
 
         print(f"\n✅ Cleaned data: {len(cleaned_data)} users with valid emails")
@@ -82,28 +87,33 @@ def convert_excel_to_json(excel_file, json_file):
 
 def main():
     """Main function"""
-    excel_file = "nftgo_b.xlsx"
-    json_file = "nftgo_b_users.json"
+    parser = argparse.ArgumentParser(description='Convert Excel file to JSON')
+    parser.add_argument('input', nargs='?', default='luma R3world 活动邮箱.xlsx',
+                       help='Input Excel file (default: luma R3world 活动邮箱.xlsx)')
+    parser.add_argument('output', nargs='?', default='luma_r3world_users.json',
+                       help='Output JSON file (default: luma_r3world_users.json)')
+    parser.add_argument('--source', type=str, default=None,
+                       help='Source identifier (optional)')
+    args = parser.parse_args()
 
     print("🔄 Excel to JSON Converter")
     print("=" * 40)
 
     # Check if Excel file exists
-    if not Path(excel_file).exists():
-        print(f"❌ Excel file not found: {excel_file}")
+    if not Path(args.input).exists():
+        print(f"❌ Excel file not found: {args.input}")
         print("Available files:")
         for file in Path(".").glob("*.xlsx"):
             print(f"  - {file}")
         return
 
     # Convert Excel to JSON
-    success = convert_excel_to_json(excel_file, json_file)
+    success = convert_excel_to_json(args.input, args.output, args.source)
 
     if success:
         print(f"\n🎉 Conversion completed successfully!")
-        print(f"📄 JSON file created: {json_file}")
-        print(f"💡 You can now use this file with your email sender:")
-        print(f"   python email_sender.py")
+        print(f"📄 JSON file created: {args.output}")
+        print(f"💡 You can now use this file with your email campaigns")
     else:
         print(f"\n❌ Conversion failed!")
 
