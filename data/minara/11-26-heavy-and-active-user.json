@@ -1,13 +1,7 @@
 [
   {
     "id": 1,
-    "email": "chemrage@naver.com",
-    "name": "",
-    "source": "heavy-and-active"
-  },
-  {
-    "id": 2,
-    "email": "zhangsan19910308@gmail.com",
+    "email": "frank@minara.ai",
     "name": "",
     "source": "heavy-and-active"
   },
@@ -6068,6 +6062,18 @@
   {
     "id": 1012,
     "email": "vasyakekic@gmail.com",
+    "name": "",
+    "source": "heavy-and-active"
+  },
+  {
+    "id": 1013,
+    "email": "chemrage@naver.com",
+    "name": "",
+    "source": "heavy-and-active"
+  },
+  {
+    "id": 1014,
+    "email": "frank@nftgo.io",
     "name": "",
     "source": "heavy-and-active"
   }

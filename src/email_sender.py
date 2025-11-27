@@ -25,6 +25,10 @@ except ImportError:
 # Configure logging
 def setup_logging(log_file='email_send.log'):
     """Configure logging for email sending"""
+    # Create directory for log file if it doesn't exist
+    log_path = Path(log_file)
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s',
@@ -122,6 +126,9 @@ class EmailSender:
     def send_via_smtp(self, to_email, to_name, subject, html_content, plain_content=None):
         """Send email via SMTP (recommended for most use cases)"""
         try:
+            # Replace placeholder in HTML content
+            personalized_html = html_content.replace('%recipient_email%', to_email)
+            
             msg = MIMEMultipart('alternative')
             msg['From'] = f"{self.from_name} <{self.from_email}>"
             msg['To'] = f"{to_name} <{to_email}>" if to_name else to_email
@@ -131,7 +138,7 @@ class EmailSender:
                 part1 = MIMEText(plain_content, 'plain')
                 msg.attach(part1)
             
-            part2 = MIMEText(html_content, 'html')
+            part2 = MIMEText(personalized_html, 'html')
             msg.attach(part2)
             
             with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
@@ -146,7 +153,7 @@ class EmailSender:
             logging.error(f"❌ Failed to send to {to_email}: {e}")
             return False
     
-    def send_via_mailgun_api(self, to_email, to_name, subject, html_content, plain_content=None):
+    def send_via_mailgun_api(self, to_email, to_name, subject, html_content, plain_content=None, tags=None):
         """Send email via Mailgun API (alternative method)"""
         if not REQUESTS_AVAILABLE:
             logging.error("requests library not available")
@@ -159,15 +166,42 @@ class EmailSender:
         try:
             url = f"https://api.mailgun.net/v3/{self.mailgun_domain}/messages"
             
+            # Replace placeholder in HTML content
+            personalized_html = html_content.replace('%recipient_email%', to_email)
+            
             data = {
                 "from": f"{self.from_name} <{self.from_email}>",
                 "to": f"{to_name} <{to_email}>" if to_name else to_email,
                 "subject": subject,
-                "html": html_content
+                "html": personalized_html,
+                
+                # ✅ Enable tracking
+                "o:tracking": "yes",
+                "o:tracking-opens": "yes",
+                "o:tracking-clicks": "yes",
+                
+                # ✅ Security
+                "o:require-tls": "yes",
+                
+                # ✅ Automatic unsubscribe - Mailgun will handle everything
+                "o:tracking-unsubscribe": "yes",
+                
+                # ✅ Unsubscribe headers (RFC 2369 & RFC 8058)
+                "h:List-Unsubscribe": f"<%unsubscribe_url%>",
+                "h:List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+                
+                # ✅ List identification
+                "h:List-Id": f"Minara Updates <updates.{self.mailgun_domain}>",
+                "h:Precedence": "bulk",
             }
             
             if plain_content:
                 data["text"] = plain_content
+            
+            # Add tags if provided
+            if tags:
+                for tag in tags:
+                    data[f"o:tag"] = tag
             
             response = requests.post(
                 url,
@@ -187,7 +221,7 @@ class EmailSender:
             logging.error(f"❌ Failed to send to {to_email} via API: {e}")
             return False
     
-    def send_test_email(self, template_path, test_email, subject, user_data=None, method="smtp"):
+    def send_test_email(self, template_path, test_email, subject, user_data=None, method="smtp", tags=None):
         """
         Send a test email
         
@@ -197,6 +231,7 @@ class EmailSender:
             subject: Email subject line
             user_data: Optional user data for personalization
             method: 'smtp' or 'api'
+            tags: Optional list of tags for Mailgun (only used with API method)
         """
         logging.info(f"🧪 Sending test email to {test_email}")
         
@@ -218,9 +253,9 @@ class EmailSender:
         if method == "smtp":
             return self.send_via_smtp(test_email, display_name, subject, html_content)
         else:
-            return self.send_via_mailgun_api(test_email, display_name, subject, html_content)
+            return self.send_via_mailgun_api(test_email, display_name, subject, html_content, tags=tags)
     
-    def send_bulk_emails(self, template_path, users_data, subject, method="smtp", dry_run=False):
+    def send_bulk_emails(self, template_path, users_data, subject, method="smtp", dry_run=False, tags=None, skip_unsubscribe_check=False):
         """
         Send emails to multiple users
         
@@ -230,9 +265,24 @@ class EmailSender:
             subject: Email subject line
             method: 'smtp' or 'api'
             dry_run: If True, only simulate sending (for testing)
+            tags: Optional list of tags for Mailgun (only used with API method)
+            skip_unsubscribe_check: If True, skip checking Mailgun suppression list
         """
         if dry_run:
             logging.info("🔍 DRY RUN MODE - No emails will be sent")
+        
+        # Filter out unsubscribed users (only if using API method)
+        if method == "api" and not skip_unsubscribe_check and self.mailgun_domain and self.mailgun_api_key:
+            try:
+                from .unsubscribe_manager import UnsubscribeManager
+                manager = UnsubscribeManager(self.mailgun_domain, self.mailgun_api_key)
+                original_count = len(users_data)
+                users_data = manager.filter_user_list(users_data)
+                filtered_count = original_count - len(users_data)
+                if filtered_count > 0:
+                    logging.info(f"🚫 Filtered out {filtered_count} unsubscribed users")
+            except Exception as e:
+                logging.warning(f"⚠️  Could not check unsubscribe list: {e}")
         
         template = self.load_template(template_path)
         if not template:
@@ -261,7 +311,10 @@ class EmailSender:
                     logging.info(f"📝 Would send to: {display_name} <{email}> ({i}/{total})")
                     success += 1
                 else:
-                    result = self.send_via_smtp(email, display_name, subject, html_content) if method == "smtp" else self.send_via_mailgun_api(email, display_name, subject, html_content)
+                    if method == "smtp":
+                        result = self.send_via_smtp(email, display_name, subject, html_content)
+                    else:
+                        result = self.send_via_mailgun_api(email, display_name, subject, html_content, tags=tags)
                     
                     if result:
                         success += 1

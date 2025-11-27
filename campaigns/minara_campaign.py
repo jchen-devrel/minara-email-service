@@ -39,7 +39,8 @@ def main():
             template_path=f'templates/minara/{args.template}',
             test_email=args.test,
             subject=args.subject,
-            method='smtp'
+            method='api',  # ✅ Use API for tracking
+            tags=['test', 'minara']
         )
         return
     
@@ -74,8 +75,9 @@ def main():
         template_path=template_path,
         users_data=users,
         subject=subject,
-        method='smtp',
-        dry_run=args.dry_run
+        method='api',  # ✅ Use API for tracking
+        dry_run=args.dry_run,
+        tags=['campaign', 'minara', args.template.replace('.html', '')]
     )
 
 if __name__ == '__main__':
