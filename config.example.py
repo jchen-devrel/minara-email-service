@@ -7,8 +7,8 @@ config.py is gitignored and will never be committed.
 MINARA_CONFIG = {
     'smtp_username': 'your-smtp-username@minara.ai',     # Mailgun SMTP username
     'smtp_password': 'your-mailgun-smtp-password',        # Mailgun SMTP password
-    'from_email': 'koda@minara.ai',                       # Sender email address
-    'from_name': 'Koda from Minara',                      # Sender display name
+    'from_email': 'xxx@minara.ai',                       # Sender email address
+    'from_name': 'xxx from Minara',                      # Sender display name
     'delay_between_emails': 20,                           # Seconds between emails (20 = safe)
 
     # Mailgun API (used for tracking & unsubscribe features)
