@@ -63,15 +63,15 @@ def convert_emails_to_json(txt_file, json_file, source_name=None):
 
 def main():
     parser = argparse.ArgumentParser(description='Convert txt email list to JSON')
-    parser.add_argument('input', nargs='?', default='data/minara/11-12-d3rentention50free.txt',
-                       help='Input txt file (default: data/minara/11-12-d3rentention50free.txt)')
-    parser.add_argument('output', nargs='?', default='data/minara/11-12-d3rentention50free.json',
-                       help='Output JSON file (default: data/minara/11-12-d3rentention50free.json)')
+    parser.add_argument('input', help='Input txt file')
+    parser.add_argument('output', nargs='?', default=None,
+                       help='Output JSON file (default: same name as input with .json extension)')
     parser.add_argument('--source', type=str, default=None,
                        help='Source identifier (optional, e.g., "ai-meet-digital-finance-event")')
     args = parser.parse_args()
-    
-    convert_emails_to_json(args.input, args.output, args.source)
+
+    output = args.output or str(Path(args.input).with_suffix('.json'))
+    convert_emails_to_json(args.input, output, args.source)
 
 if __name__ == '__main__':
     main()

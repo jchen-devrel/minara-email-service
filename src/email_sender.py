@@ -175,19 +175,17 @@ class EmailSender:
                 "subject": subject,
                 "html": personalized_html,
                 
-                # ✅ Enable tracking
+                # ✅ Enable open tracking (click tracking disabled to avoid URL rewrite issues)
                 "o:tracking": "yes",
                 "o:tracking-opens": "yes",
-                "o:tracking-clicks": "yes",
+                "o:tracking-clicks": "no",
                 
                 # ✅ Security
                 "o:require-tls": "yes",
                 
-                # ✅ Automatic unsubscribe - Mailgun will handle everything
-                "o:tracking-unsubscribe": "yes",
-                
                 # ✅ Unsubscribe headers (RFC 2369 & RFC 8058)
-                "h:List-Unsubscribe": f"<%unsubscribe_url%>",
+                # Using direct Mailgun API endpoint to avoid tracking domain certificate issues
+                "h:List-Unsubscribe": f"<https://api.mailgun.net/v3/{self.mailgun_domain}/unsubscribes>",
                 "h:List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
                 
                 # ✅ List identification

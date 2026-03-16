@@ -1,35 +1,17 @@
 """
-Configuration file for email campaigns
-Copy this file to config.py and fill in your credentials
+Configuration template — copy this to config.py and fill in your credentials.
+config.py is gitignored and will never be committed.
 """
 
 # Minara Campaign Configuration
 MINARA_CONFIG = {
-    'smtp_username': 'koda@minara.ai',
-    'smtp_password': 'your-password-here',
-    'from_email': 'koda@minara.ai',
-    'from_name': 'Koda from Minara',
-    'delay_between_emails': 11,  # seconds
-}
+    'smtp_username': 'your-smtp-username@minara.ai',     # Mailgun SMTP username
+    'smtp_password': 'your-mailgun-smtp-password',        # Mailgun SMTP password
+    'from_email': 'koda@minara.ai',                       # Sender email address
+    'from_name': 'Koda from Minara',                      # Sender display name
+    'delay_between_emails': 20,                           # Seconds between emails (20 = safe)
 
-# NFTGo Campaign Configuration
-NFTGO_CONFIG = {
-    'smtp_username': 'frank@nftgo.io',
-    'smtp_password': 'your-password-here',
-    'from_email': 'frank@nftgo.io',
-    'from_name': 'Frank from NFTGo',
-    'delay_between_emails': 15,  # seconds
+    # Mailgun API (used for tracking & unsubscribe features)
+    'mailgun_domain': 'minara.ai',                        # Your Mailgun sending domain
+    'mailgun_api_key': 'your-mailgun-api-key',            # Mailgun API key (Private API Key)
 }
-
-# Alternative: Mailgun API Configuration (optional)
-MAILGUN_API_CONFIG = {
-    'mailgun_domain': 'mg.yourdomain.com',
-    'mailgun_api_key': 'key-xxxxx',
-}
-
-# SMTP Server Configuration (Mailgun by default)
-SMTP_CONFIG = {
-    'smtp_server': 'smtp.mailgun.org',
-    'smtp_port': 587,
-}
-
