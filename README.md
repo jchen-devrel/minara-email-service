@@ -27,7 +27,8 @@ MINARA_CONFIG = {
 ## 結構
 
 ```
-campaigns/minara_campaign.py   # 主發送腳本
+campaigns/minara_campaign.py   # 單次發送腳本
+campaigns/batch_campaign.py    # 大列表分批發送腳本
 templates/minara/*.html        # 郵件模板
 data/minara/*.json             # 用戶列表
 config.py                      # 憑證（gitignored）
@@ -43,13 +44,15 @@ python src/convert_txt_to_json.py data/minara/users.txt
 python campaigns/minara_campaign.py \
   --test frank@minara.ai \
   --template sharpe-guard-v2-launch.html \
-  --subject "Your subject here"
+  --subject "Your subject here" \
+  --tags sharpe-guard-v2 test
 
 # 正式發送
 python campaigns/minara_campaign.py \
   --template sharpe-guard-v2-launch.html \
   --users 03-07-autopilot-non-active-user.json \
-  --subject "Your subject here"
+  --subject "Your subject here" \
+  --tags sharpe-guard-v2 autopilot-non-active
 
 # 查看進度
 tail -f campaigns/minara/email_send.log
@@ -63,6 +66,7 @@ tail -f campaigns/minara/email_send.log
 | `--template FILE` | 模板檔名（在 templates/minara/ 下） |
 | `--users FILE` | 用戶 JSON 檔名（在 data/minara/ 下） |
 | `--subject TEXT` | 郵件標題 |
+| `--tags TAG1 TAG2` | Mailgun 追蹤標籤，可多個（不傳則自動用模板名稱） |
 | `--dry-run` | 模擬發送，不實際送出 |
 
 ## 大列表自動分批發送
@@ -72,21 +76,26 @@ python campaigns/batch_campaign.py \
   --users data/minara/biglist.json \
   --template templates/minara/my-template.html \
   --subject "Your subject" \
-  --batch-size 1500 \
-  --delay-hours 24
+  --tags sharpe-guard-v2 lapsed-user \
+  --batch-size 600 \
+  --delay-hours 20
 ```
 
-- 自動切成每天 1500 封，發完一批等 24 小時再發下一批
+- 自動切成每批 N 封，發完一批等 N 小時再發下一批
 - 每封發完就存進度，VM 重啟後重新跑同一指令會**自動從斷點繼續**，不會重複發
 - 進度檔存在 `campaigns/minara/progress/`
 
+## 背景發送（斷開 SSH 不中斷）
+
+```bash
+tmux new -s email-campaign
+# 跑指令，輸入 yes 確認後
+# Ctrl+B 然後 D  →  detach，安全斷開 SSH
+
+# 回來查看
+tmux attach -t email-campaign
+```
+
 ## 速率設定
 
-`config.py` 裡 `delay_between_emails: 20`（秒），453 封約 2.5 小時，對 Mailgun 和 domain 安全。
-
-
-
-### 通过后台建立tmux自动跑脚本（detached模式）
-```bash
-tmux new-session -d -s email-campaign "python campaigns/batch_campaign.py ..."
-```
+`config.py` 裡 `delay_between_emails: 20`（秒），對 Mailgun 和 domain 安全。

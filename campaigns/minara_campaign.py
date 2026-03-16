@@ -8,7 +8,6 @@ import sys
 import argparse
 from pathlib import Path
 
-# Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.email_sender import EmailSender, load_users_from_json, setup_logging
@@ -18,20 +17,26 @@ def main():
     parser = argparse.ArgumentParser(description='Run Minara email campaign')
     parser.add_argument('--dry-run', action='store_true', help='Test mode - no emails sent')
     parser.add_argument('--test', type=str, help='Send test email to specified address')
-    parser.add_argument('--template', default='3-event-user-reactivation.html', 
-                       help='Template filename')
+    parser.add_argument('--template', default='3-event-user-reactivation.html',
+                       help='Template filename (in templates/minara/)')
     parser.add_argument('--users', default='ai-meet-digital-finance.json',
-                       help='User data filename')
+                       help='User data filename (in data/minara/)')
     parser.add_argument('--subject', type=str, default='Getting started with Minara',
                        help='Email subject line')
+    parser.add_argument('--tags', nargs='+', default=None,
+                       help='Mailgun tracking tags (e.g. --tags sharpe-guard-v2 autopilot)')
     args = parser.parse_args()
-    
+
+    # Default tags if not provided
+    template_slug = args.template.replace('.html', '')
+    tags = args.tags if args.tags else ['minara', template_slug]
+
     # Setup logging
     setup_logging('campaigns/minara/email_send.log')
-    
+
     # Initialize sender
     sender = EmailSender(**MINARA_CONFIG)
-    
+
     # Test mode
     if args.test:
         print(f"🧪 Sending test email to {args.test}")
@@ -39,45 +44,43 @@ def main():
             template_path=f'templates/minara/{args.template}',
             test_email=args.test,
             subject=args.subject,
-            method='api',  # ✅ Use API for tracking
-            tags=['test', 'minara']
+            method='api',
+            tags=['test'] + tags
         )
         return
-    
+
     # Load users
     print("📂 Loading users...")
     users = load_users_from_json(f'data/minara/{args.users}')
-    
+
     if not users:
         print("❌ No users found")
         return
-    
+
     print(f"✅ Loaded {len(users)} users")
-    
-    # Campaign configuration
+
     template_path = f'templates/minara/{args.template}'
-    subject = args.subject
-    
+
     print(f"\n📧 Email Campaign:")
     print(f"   Template: {template_path}")
-    print(f"   Subject: {subject}")
+    print(f"   Subject:  {args.subject}")
+    print(f"   Tags:     {tags}")
     print(f"   Recipients: {len(users)}")
     print(f"   Mode: {'DRY RUN' if args.dry_run else 'PRODUCTION'}")
-    
+
     if not args.dry_run:
         confirm = input("\n⚠️  Send emails to real users? (yes/no): ")
         if confirm.lower() != 'yes':
             print("❌ Campaign cancelled")
             return
-    
-    # Send bulk emails
+
     sender.send_bulk_emails(
         template_path=template_path,
         users_data=users,
-        subject=subject,
-        method='api',  # ✅ Use API for tracking
+        subject=args.subject,
+        method='api',
         dry_run=args.dry_run,
-        tags=['campaign', 'minara', args.template.replace('.html', '')]
+        tags=tags
     )
 
 if __name__ == '__main__':

@@ -61,6 +61,7 @@ def main():
     parser.add_argument("--batch-size", type=int, default=1500, help="Emails per batch (default: 1500)")
     parser.add_argument("--delay-hours", type=float, default=24, help="Hours between batches (default: 24)")
     parser.add_argument("--delay-seconds", type=int, default=None, help="Override delay between individual emails (default: from config)")
+    parser.add_argument("--tags", nargs="+", default=["batch-campaign"], help="Mailgun tags (default: batch-campaign)")
     parser.add_argument("--dry-run", action="store_true", help="Simulate without sending")
     args = parser.parse_args()
 
@@ -126,7 +127,7 @@ def main():
             if args.dry_run:
                 logging.info(f"📝 [DRY RUN] Would send to: {email} ({i}/{len(batch)})")
             else:
-                result = sender.send_via_mailgun_api(email, display_name, args.subject, html, tags=["batch-campaign"])
+                result = sender.send_via_mailgun_api(email, display_name, args.subject, html, tags=args.tags)
                 if result:
                     sent_set.add(email)
 
