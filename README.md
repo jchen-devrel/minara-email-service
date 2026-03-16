@@ -14,8 +14,8 @@ cp config.example.py config.py
 MINARA_CONFIG = {
     'smtp_username': 'your-smtp-username@minara.ai',
     'smtp_password': 'your-mailgun-smtp-password',
-    'from_email': 'koda@minara.ai',
-    'from_name': 'Koda from Minara',
+    'from_email': 'xxx@minara.ai',
+    'from_name': 'xxx from Minara',
     'delay_between_emails': 20,
     'mailgun_domain': 'minara.ai',
     'mailgun_api_key': 'your-mailgun-api-key',  # Mailgun → Settings → API Keys → Private API Key
