@@ -30,6 +30,10 @@ config.py
 # Logs
 *.log
 
+# Uploaded recipient spreadsheets (keep folder; ignore contents except .gitkeep)
+uploads/*
+!uploads/.gitkeep
+
 # Data files (user email lists)
 data/*.csv
 data/*.json

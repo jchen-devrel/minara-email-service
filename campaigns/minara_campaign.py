@@ -25,6 +25,8 @@ def main():
                        help='Email subject line')
     parser.add_argument('--tags', nargs='+', default=None,
                        help='Mailgun tracking tags (e.g. --tags sharpe-guard-v2 autopilot)')
+    parser.add_argument('--yes', action='store_true',
+                       help='Skip confirmation prompt when sending to real users (non-interactive)')
     args = parser.parse_args()
 
     # Default tags if not provided
@@ -68,7 +70,7 @@ def main():
     print(f"   Recipients: {len(users)}")
     print(f"   Mode: {'DRY RUN' if args.dry_run else 'PRODUCTION'}")
 
-    if not args.dry_run:
+    if not args.dry_run and not args.yes:
         confirm = input("\n⚠️  Send emails to real users? (yes/no): ")
         if confirm.lower() != 'yes':
             print("❌ Campaign cancelled")
